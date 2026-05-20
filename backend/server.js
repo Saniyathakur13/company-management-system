@@ -1,3 +1,8 @@
+
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const express = require('express');
 const mysql = require('mysql2');
 const jwt = require('jsonwebtoken');
@@ -19,7 +24,9 @@ const db = mysql.createPool({
     dateStrings: true,    // ADD THIS LINE
     waitForConnections: true,
     connectionLimit: 10
+        ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false
 }).promise();
+
 
 // Helper function - removes timezone from date
 // Helper function - removes timezone from date
