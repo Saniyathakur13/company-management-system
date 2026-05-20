@@ -3,6 +3,8 @@ const mysql = require('mysql2');
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
 require('dotenv').config();
+// For production on Render
+const PORT = process.env.PORT || 5000;
 
 const app = express();
 app.use(cors());
