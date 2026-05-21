@@ -324,38 +324,70 @@ function Dashboard() {
             )}
 
             {/* Invoices Table */}
-            <table border="1" cellPadding="10" style={{ width: '100%', borderCollapse: 'collapse' }}>
-              <thead style={{ background: '#34495e', color: 'white' }}>
-                <tr>
-                  <th>Invoice #</th>
-                  <th>Date</th>
-                  <th>Amount</th>
-                  <th>Financial Year</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {invoices.map(inv => (
-                  <tr key={inv.id}>
-                    <td>{inv.invoice_number}</td>
-                    <td>{typeof inv.invoice_date === 'string' ? inv.invoice_date : new Date(inv.invoice_date).toLocaleDateString('en-CA')}</td>
-                    <td>₹{parseFloat(inv.invoice_amount).toFixed(2)}</td>
-                    <td>{inv.financial_year}</td>
-                    <td>
-                      <button onClick={() => setEditingInvoice(inv)} style={{ marginRight: 5, padding: '4px 8px', cursor: 'pointer' }}>Edit</button>
-                      <button onClick={() => deleteInvoice(inv.id)} style={{ padding: '4px 8px', background: '#e74c3c', color: 'white', border: 'none', cursor: 'pointer' }}>Delete</button>
-                    </td>
-                  </td>
-                ))}
-              </tbody>
-              {invoices.length === 0 && (
-                <tbody>
-                  <tr>
-                    <td colSpan="5" style={{ textAlign: 'center', padding: 40 }}>📭 No invoices found</td>
-                  </tr>
-                </tbody>
-              )}
-            </table>
+          {/* Invoices Table */}
+<table border="1" cellPadding="10" style={{ width: '100%', borderCollapse: 'collapse' }}>
+  <thead style={{ background: '#34495e', color: 'white' }}>
+    <tr>
+      <th>Invoice #</th>
+      <th>Date</th>
+      <th>Amount</th>
+      <th>Financial Year</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {invoices.length > 0 ? (
+      invoices.map(inv => (
+        <tr key={inv.id}>
+          <td>{inv.invoice_number}</td>
+
+          <td>
+            {typeof inv.invoice_date === 'string'
+              ? inv.invoice_date.split('T')[0]
+              : new Date(inv.invoice_date).toLocaleDateString('en-CA')}
+          </td>
+
+          <td>₹{parseFloat(inv.invoice_amount).toFixed(2)}</td>
+
+          <td>{inv.financial_year}</td>
+
+          <td>
+            <button
+              onClick={() => setEditingInvoice(inv)}
+              style={{
+                marginRight: 5,
+                padding: '4px 8px',
+                cursor: 'pointer'
+              }}
+            >
+              Edit
+            </button>
+
+            <button
+              onClick={() => deleteInvoice(inv.id)}
+              style={{
+                padding: '4px 8px',
+                background: '#e74c3c',
+                color: 'white',
+                border: 'none',
+                cursor: 'pointer'
+              }}
+            >
+              Delete
+            </button>
+          </td>
+        </tr>
+      ))
+    ) : (
+      <tr>
+        <td colSpan="5" style={{ textAlign: 'center', padding: 40 }}>
+          📭 No invoices found
+        </td>
+      </tr>
+    )}
+  </tbody>
+</table>
           </>
         )}
 
