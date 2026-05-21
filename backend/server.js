@@ -1,4 +1,3 @@
-
 const express = require('express');
 const mysql = require('mysql2');
 const jwt = require('jsonwebtoken');
@@ -10,21 +9,18 @@ app.use(cors());
 app.use(express.json());
 
 const db = mysql.createPool({
-    host: process.env.DB_HOST || 'localhost',
-    user: process.env.DB_USER || 'root',
+    host: 'localhost',
+    user: 'root',
     password: process.env.DB_PASSWORD || '',
-    database: process.env.DB_NAME || 'company_management',
-    port: process.env.DB_PORT || 3306,
-    dateStrings: true,
+    database: 'company_management',
+    timezone: '+00:00',  // ADD THIS LINE
+    dateStrings: true,    // ADD THIS LINE
     waitForConnections: true,
-    connectionLimit: 10,
-    ssl: {
-        rejectUnauthorized: false
-    }
+    connectionLimit: 10
 }).promise();
 
-// ... rest of your code
-
+// Helper function - removes timezone from date
+// Helper function - removes timezone from date
 // Helper function - keep date exactly as received
 function cleanDate(date) {
     if (!date) return '';
@@ -392,7 +388,7 @@ app.delete('/api/users/:id', async (req, res) => {
         res.status(500).json({ success: false, message: err.message }); 
     }
 });
-
+const PORT = 5000;
 app.listen(PORT, () => {
     console.log(`🚀 Server on http://localhost:${PORT}`);
     console.log('\n✅ LOGINS (Password: admin123):');
