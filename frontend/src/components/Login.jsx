@@ -20,9 +20,9 @@ function Login() {
         console.log('Login response:', response.data);
         
         if (response.data.success && response.data.token) {
-            localStorage.setItem('token', response.data.token);
-            localStorage.setItem('role', response.data.role);
-            localStorage.setItem('userId', response.data.userId);
+           localStorage.setItem('token', response.data.token);
+localStorage.setItem('role', response.data.role);
+localStorage.setItem('userId', response.data.userId);
             
             console.log('Redirecting to dashboard...');
             navigate('/dashboard');
