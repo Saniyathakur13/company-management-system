@@ -36,7 +36,7 @@ function Dashboard() {
 
   const fetchUsers = async () => {
     try {
-        const res = await axios.get('http://localhost:5000/api/users', {
+        const res = await axios.get('https://company-management-system-tp93.onrender.com/api/invoices', {
             headers: { Authorization: `Bearer ${token}` }
         });
         console.log('Fetched users response:', res.data);
@@ -56,7 +56,7 @@ function Dashboard() {
     }
     
     try {
-      const response = await axios.post('http://localhost:5000/api/invoices', {
+      const response = await axios.post('https://company-management-system-tp93.onrender.com/api/invoices', {
         number: newInvoice.number,
         date: newInvoice.date,
         amount: newInvoice.amount
@@ -104,7 +104,7 @@ function Dashboard() {
     console.log('Sending date to server:', formattedDate);
     
     try {
-      const response = await axios.put(`http://localhost:5000/api/invoices/${editingInvoice.id}`, {
+      const response = await axios.put(`https://company-management-system-tp93.onrender.com/api/invoices/${editingInvoice.id}`, {
         invoice_number: editingInvoice.invoice_number,
         invoice_date: formattedDate,
         invoice_amount: editingInvoice.invoice_amount
@@ -127,7 +127,7 @@ function Dashboard() {
 
   const deleteInvoice = async (id) => {
     if (confirm('Delete this invoice?')) {
-      await axios.delete(`http://localhost:5000/api/invoices/${id}`, {
+      await axios.delete(`https://company-management-system-tp93.onrender.com/api/invoices/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       fetchInvoices();
@@ -141,7 +141,7 @@ function Dashboard() {
     }
     
     try {
-      const response = await axios.post('http://localhost:5000/api/users', newUser, {
+      const response = await axios.post('https://company-management-system-tp93.onrender.com/api/users', newUser, {
         headers: { Authorization: `Bearer ${token}` }
       });
       
@@ -172,7 +172,7 @@ function Dashboard() {
     }
     
     try {
-        const response = await axios.put(`http://localhost:5000/api/users/${id}/role`, { role: newRole }, {
+        const response = await axios.put(`https://company-management-system-tp93.onrender.com/api/users/${id}/role`, { role: newRole }, {
             headers: { Authorization: `Bearer ${token}` }
         });
         
@@ -207,7 +207,7 @@ function Dashboard() {
     }
     
     try {
-      const response = await axios.delete(`http://localhost:5000/api/users/${id}`, {
+      const response = await axios.delete(`https://company-management-system-tp93.onrender.com/api/users/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       
