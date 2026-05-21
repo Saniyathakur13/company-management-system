@@ -34,17 +34,23 @@ function Dashboard() {
     } catch(err) { console.error(err); }
   };
 
-  const fetchUsers = async () => {
+ const fetchUsers = async () => {
     try {
+        const token = localStorage.getItem('token');
+        console.log('Fetching users with token:', token);
+        
         const res = await axios.get(`${API_URL}/users`, {
-            headers: { Authorization: `Bearer ${token}` }
+            headers: { 
+                'Authorization': `Bearer ${token}` 
+            }
         });
         console.log('Fetched users response:', res.data);
         setUsers(res.data);
     } catch(err) { 
         console.error('Fetch users error:', err);
+        console.error('Error response:', err.response);
     }
-  };
+};
 
   useEffect(() => { fetchInvoices(); }, [searchFilter]);
   useEffect(() => { fetchUsers(); }, []);
