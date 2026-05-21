@@ -8,14 +8,14 @@ function Login() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
+  const API_URL = 'https://company-management-system-tp93.onrender.com/api';
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
     
     try {
-        const response = axios.post('https://company-management-system-tp93.onrender.com/api/login', { email, password })
+        const response = axios.post(`${API_URL}/login`, { email, password })
         
         console.log('Login response:', response.data);
         
