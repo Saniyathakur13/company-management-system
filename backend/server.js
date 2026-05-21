@@ -30,6 +30,26 @@ function cleanDate(date) {
     // Just return it as is, no conversion
     return date;
 }
+
+// Add this root route
+app.get('/', (req, res) => {
+    res.json({
+        message: 'Company Management System API',
+        status: 'running',
+        endpoints: {
+            login: 'POST /api/login',
+            invoices: 'GET /api/invoices',
+            users: 'GET /api/users',
+            createInvoice: 'POST /api/invoices',
+            updateInvoice: 'PUT /api/invoices/:id',
+            deleteInvoice: 'DELETE /api/invoices/:id',
+            createUser: 'POST /api/users',
+            updateUserRole: 'PUT /api/users/:id/role',
+            deleteUser: 'DELETE /api/users/:id'
+        }
+    });
+});
+
 // ============ LOGIN ============
 app.post('/api/login', async (req, res) => {
     const { email, password } = req.body;
