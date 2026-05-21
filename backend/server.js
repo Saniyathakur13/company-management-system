@@ -399,7 +399,7 @@ app.delete('/api/users/:id', async (req, res) => {
         res.status(500).json({ success: false, message: err.message }); 
     }
 });
-const PORT = 5000;
+
 app.listen(PORT, () => {
     console.log(`🚀 Server on http://localhost:${PORT}`);
     console.log('\n✅ LOGINS (Password: admin123):');
