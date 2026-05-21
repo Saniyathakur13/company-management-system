@@ -9,16 +9,18 @@ app.use(cors());
 app.use(express.json());
 
 const db = mysql.createPool({
-    host: 'localhost',
-    user: 'root',
+    host: process.env.DB_HOST || 'mysql-1cebc44d-company-management-system.j.aivencloud.com',
+    user: process.env.DB_USER || 'avnadmin',
     password: process.env.DB_PASSWORD || '',
-    database: 'company_management',
-    timezone: '+00:00',  // ADD THIS LINE
-    dateStrings: true,    // ADD THIS LINE
+    database: process.env.DB_NAME || 'company_management',
+    port: process.env.DB_PORT || 23659,
+    dateStrings: true,
     waitForConnections: true,
-    connectionLimit: 10
+    connectionLimit: 10,
+    ssl: {
+        rejectUnauthorized: false
+    }
 }).promise();
-
 // Helper function - removes timezone from date
 // Helper function - removes timezone from date
 // Helper function - keep date exactly as received
