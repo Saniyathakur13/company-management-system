@@ -197,12 +197,14 @@ app.delete('/api/invoices/:id', async (req, res) => {
 // ============ USERS ============
 app.get('/api/users', async (req, res) => {
     const token = req.headers.authorization?.split(' ')[1];
-    if (!token) return res.status(401).json({ message: 'Unauthorized' });
+    
+    if (!token) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
     
     try {
         const decoded = jwt.verify(token, 'secret');
-        console.log('=== GET USERS ===');
-        console.log('Logged in as:', decoded.role, 'ID:', decoded.id);
+        console.log('Logged in as:', decoded.role);
         
         let query = '';
         
@@ -213,7 +215,6 @@ app.get('/api/users', async (req, res) => {
             query = 'SELECT id, user_id, username, email, role, created_by, created_at FROM users WHERE role = "UNIT_MANAGER" OR role = "USER" ORDER BY id DESC';
         } 
         else if (decoded.role === 'UNIT_MANAGER') {
-            // UNIT MANAGER SEES ALL USERS
             query = 'SELECT id, user_id, username, email, role, created_by, created_at FROM users WHERE role = "USER" ORDER BY id DESC';
         } 
         else {
@@ -223,6 +224,7 @@ app.get('/api/users', async (req, res) => {
         const [users] = await db.query(query);
         console.log('Users found:', users.length);
         res.json(users);
+        
     } catch(err) { 
         console.error('GET users error:', err);
         res.status(500).json({ error: err.message }); 
