@@ -1,16 +1,9 @@
 
-import path from 'path';
-import { fileURLToPath } from 'url';
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-import express from 'express';
-import mysql from 'mysql2';
-import jwt from 'jsonwebtoken';
-import cors from 'cors';
-import dotenv from 'dotenv';
-dotenv.config();
-// For production on Render
-const PORT = process.env.PORT || 5000;
+const express = require('express');
+const mysql = require('mysql2');
+const jwt = require('jsonwebtoken');
+const cors = require('cors');
+require('dotenv').config();
 
 const app = express();
 app.use(cors());
@@ -29,6 +22,8 @@ const db = mysql.createPool({
         rejectUnauthorized: false
     }
 }).promise();
+
+// ... rest of your code
 
 // Helper function - keep date exactly as received
 function cleanDate(date) {
