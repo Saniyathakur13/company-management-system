@@ -13,7 +13,7 @@ function Dashboard() {
   const [newInvoice, setNewInvoice] = useState({ number: '', date: '', amount: '' });
   const [newUser, setNewUser] = useState({ username: '', email: '', role: '', password: '' });
   const [searchFilter, setSearchFilter] = useState('');
-
+  const API_URL = 'https://company-management-system-tp93.onrender.com/api';
   const token = localStorage.getItem('token');
   const userRole = localStorage.getItem('role');
 
@@ -23,7 +23,7 @@ function Dashboard() {
 
   const fetchInvoices = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/invoices', {
+      const res = await axios.get(`${API_URL}/invoices`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       let data = res.data;
@@ -36,7 +36,7 @@ function Dashboard() {
 
   const fetchUsers = async () => {
     try {
-        const res = await axios.get('https://company-management-system-tp93.onrender.com/api/invoices', {
+        const res = await axios.get(`${API_URL}/users`, {
             headers: { Authorization: `Bearer ${token}` }
         });
         console.log('Fetched users response:', res.data);
@@ -56,7 +56,7 @@ function Dashboard() {
     }
     
     try {
-      const response = await axios.post('https://company-management-system-tp93.onrender.com/api/invoices', {
+      const response = await axios.post(`${API_URL}/invoices`, {
         number: newInvoice.number,
         date: newInvoice.date,
         amount: newInvoice.amount
@@ -77,26 +77,21 @@ function Dashboard() {
     }
   };
 
- const updateInvoice = async () => {
+  const updateInvoice = async () => {
     if (!editingInvoice.invoice_number || !editingInvoice.invoice_date || !editingInvoice.invoice_amount) {
       alert('Please fill all fields');
       return;
     }
     
-    // FIX: Get the date from the input and ensure it's sent as is
     let formattedDate = editingInvoice.invoice_date;
     
-    // If the date has timezone info, remove it
     if (formattedDate && formattedDate.includes('T')) {
       formattedDate = formattedDate.split('T')[0];
     }
     
-    // Ensure format is YYYY-MM-DD
     if (formattedDate && formattedDate.match(/^\d{4}-\d{2}-\d{2}$/)) {
-      // Already correct format
       console.log('Date is correct format:', formattedDate);
     } else {
-      // Try to format from Date object
       const d = new Date(formattedDate);
       formattedDate = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
     }
@@ -104,7 +99,7 @@ function Dashboard() {
     console.log('Sending date to server:', formattedDate);
     
     try {
-      const response = await axios.put(`https://company-management-system-tp93.onrender.com/api/invoices/${editingInvoice.id}`, {
+      const response = await axios.put(`${API_URL}/invoices/${editingInvoice.id}`, {
         invoice_number: editingInvoice.invoice_number,
         invoice_date: formattedDate,
         invoice_amount: editingInvoice.invoice_amount
@@ -127,7 +122,7 @@ function Dashboard() {
 
   const deleteInvoice = async (id) => {
     if (confirm('Delete this invoice?')) {
-      await axios.delete(`https://company-management-system-tp93.onrender.com/api/invoices/${id}`, {
+      await axios.delete(`${API_URL}/invoices/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       fetchInvoices();
@@ -141,7 +136,7 @@ function Dashboard() {
     }
     
     try {
-      const response = await axios.post('https://company-management-system-tp93.onrender.com/api/users', newUser, {
+      const response = await axios.post(`${API_URL}/users`, newUser, {
         headers: { Authorization: `Bearer ${token}` }
       });
       
@@ -172,7 +167,7 @@ function Dashboard() {
     }
     
     try {
-        const response = await axios.put(`https://company-management-system-tp93.onrender.com/api/users/${id}/role`, { role: newRole }, {
+        const response = await axios.put(`${API_URL}/users/${id}/role`, { role: newRole }, {
             headers: { Authorization: `Bearer ${token}` }
         });
         
@@ -189,7 +184,7 @@ function Dashboard() {
     }
   };
 
- const deleteUser = async (id) => {
+  const deleteUser = async (id) => {
     const currentUserId = localStorage.getItem('userId');
     const currentUserRole = localStorage.getItem('role');
     
@@ -207,7 +202,7 @@ function Dashboard() {
     }
     
     try {
-      const response = await axios.delete(`https://company-management-system-tp93.onrender.com/api/users/${id}`, {
+      const response = await axios.delete(`${API_URL}/users/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       
@@ -316,11 +311,11 @@ function Dashboard() {
                 <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
                   <input value={editingInvoice.invoice_number} onChange={(e) => setEditingInvoice({...editingInvoice, invoice_number: e.target.value})} style={{ padding: 8, flex: 1, border: '1px solid #ddd', borderRadius: 4 }} />
                   <input 
-  type="date" 
-  value={editingInvoice.invoice_date ? (typeof editingInvoice.invoice_date === 'string' ? editingInvoice.invoice_date.split('T')[0] : editingInvoice.invoice_date) : ''} 
-  onChange={(e) => setEditingInvoice({...editingInvoice, invoice_date: e.target.value})} 
-  style={{ padding: 8, border: '1px solid #ddd', borderRadius: 4 }} 
-/>
+                    type="date" 
+                    value={editingInvoice.invoice_date ? (typeof editingInvoice.invoice_date === 'string' ? editingInvoice.invoice_date.split('T')[0] : editingInvoice.invoice_date) : ''} 
+                    onChange={(e) => setEditingInvoice({...editingInvoice, invoice_date: e.target.value})} 
+                    style={{ padding: 8, border: '1px solid #ddd', borderRadius: 4 }} 
+                  />
                   <input value={editingInvoice.invoice_amount} onChange={(e) => setEditingInvoice({...editingInvoice, invoice_amount: e.target.value})} style={{ padding: 8, width: 120, border: '1px solid #ddd', borderRadius: 4 }} />
                   <button onClick={updateInvoice} style={{ padding: '8px 16px', background: '#3498db', color: 'white', border: 'none', borderRadius: 4, cursor: 'pointer' }}>Update</button>
                   <button onClick={() => setEditingInvoice(null)} style={{ padding: '8px 16px', background: '#95a5a6', color: 'white', border: 'none', borderRadius: 4, cursor: 'pointer' }}>Cancel</button>
@@ -329,39 +324,38 @@ function Dashboard() {
             )}
 
             {/* Invoices Table */}
-            {/* Invoices Table */}
-<table border="1" cellPadding="10" style={{ width: '100%', borderCollapse: 'collapse' }}>
-  <thead style={{ background: '#34495e', color: 'white' }}>
-    <tr>
-      <th>Invoice #</th>
-      <th>Date</th>
-      <th>Amount</th>
-      <th>Financial Year</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    {invoices.map(inv => (
-      <tr key={inv.id}>
-        <td>{inv.invoice_number}</td>
-        <td>{typeof inv.invoice_date === 'string' ? inv.invoice_date : new Date(inv.invoice_date).toLocaleDateString('en-CA')}</td>
-        <td>₹{parseFloat(inv.invoice_amount).toFixed(2)}</td>
-        <td>{inv.financial_year}</td>
-        <td>
-          <button onClick={() => setEditingInvoice(inv)} style={{ marginRight: 5, padding: '4px 8px', cursor: 'pointer' }}>Edit</button>
-          <button onClick={() => deleteInvoice(inv.id)} style={{ padding: '4px 8px', background: '#e74c3c', color: 'white', border: 'none', cursor: 'pointer' }}>Delete</button>
-        </td>
-      </tr>
-    ))}
-  </tbody>
-  {invoices.length === 0 && (
-    <tbody>
-      <tr>
-        <td colSpan="5" style={{ textAlign: 'center', padding: 40 }}>📭 No invoices found</td>
-      </tr>
-    </tbody>
-  )}
-</table>
+            <table border="1" cellPadding="10" style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <thead style={{ background: '#34495e', color: 'white' }}>
+                <tr>
+                  <th>Invoice #</th>
+                  <th>Date</th>
+                  <th>Amount</th>
+                  <th>Financial Year</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {invoices.map(inv => (
+                  <tr key={inv.id}>
+                    <td>{inv.invoice_number}</td>
+                    <td>{typeof inv.invoice_date === 'string' ? inv.invoice_date : new Date(inv.invoice_date).toLocaleDateString('en-CA')}</td>
+                    <td>₹{parseFloat(inv.invoice_amount).toFixed(2)}</td>
+                    <td>{inv.financial_year}</td>
+                    <td>
+                      <button onClick={() => setEditingInvoice(inv)} style={{ marginRight: 5, padding: '4px 8px', cursor: 'pointer' }}>Edit</button>
+                      <button onClick={() => deleteInvoice(inv.id)} style={{ padding: '4px 8px', background: '#e74c3c', color: 'white', border: 'none', cursor: 'pointer' }}>Delete</button>
+                    </td>
+                  </td>
+                ))}
+              </tbody>
+              {invoices.length === 0 && (
+                <tbody>
+                  <tr>
+                    <td colSpan="5" style={{ textAlign: 'center', padding: 40 }}>📭 No invoices found</td>
+                  </tr>
+                </tbody>
+              )}
+            </table>
           </>
         )}
 
@@ -388,73 +382,73 @@ function Dashboard() {
             )}
 
             <table border="1" cellPadding="10" style={{ width: '100%', borderCollapse: 'collapse' }}>
-  <thead style={{ background: '#34495e', color: 'white' }}>
-    <tr>
-      <th>User ID</th>
-      <th>Username</th>
-      <th>Email</th>
-      <th>Role</th>
-      <th>Change Role</th>
-      <th>Action</th>
-    </tr>
-  </thead>
-  <tbody>
-    {users.map(user => (
-      <tr key={user.id} style={{ backgroundColor: user.id == localStorage.getItem('userId') ? '#f0f8ff' : 'white' }}>
-        <td>{user.user_id}</td>
-        <td>
-          {user.username}
-          {user.id == localStorage.getItem('userId') && <span style={{ marginLeft: '8px', fontSize: '11px', background: '#3498db', color: 'white', padding: '2px 6px', borderRadius: '10px' }}>YOU</span>}
-        </td>
-        <td>{user.email}</td>
-        <td><span style={{ padding: '4px 8px', borderRadius: '4px', background: getRoleBadgeColor(user.role), color: 'white', fontSize: '12px' }}>{user.role}</span></td>
-        <td>
-          {user.id != localStorage.getItem('userId') && user.role !== 'SUPER_ADMIN' ? (
-            <select 
-              onChange={(e) => updateRole(user.id, e.target.value, user.role)} 
-              style={{ padding: '8px 12px', borderRadius: '4px', width: '160px', border: '1px solid #3498db', cursor: 'pointer' }}
-              defaultValue=""
-            >
-              <option value="" disabled>Change to:</option>
-              {localStorage.getItem('role') === 'SUPER_ADMIN' && (
-                <>
-                  <option value="ADMIN">ADMIN</option>
-                  <option value="UNIT_MANAGER">UNIT MANAGER</option>
-                  <option value="USER">USER</option>
-                </>
+              <thead style={{ background: '#34495e', color: 'white' }}>
+                <tr>
+                  <th>User ID</th>
+                  <th>Username</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Change Role</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {users.map(user => (
+                  <tr key={user.id} style={{ backgroundColor: user.id == localStorage.getItem('userId') ? '#f0f8ff' : 'white' }}>
+                    <td>{user.user_id}</td>
+                    <td>
+                      {user.username}
+                      {user.id == localStorage.getItem('userId') && <span style={{ marginLeft: '8px', fontSize: '11px', background: '#3498db', color: 'white', padding: '2px 6px', borderRadius: '10px' }}>YOU</span>}
+                    </td>
+                    <td>{user.email}</td>
+                    <td><span style={{ padding: '4px 8px', borderRadius: '4px', background: getRoleBadgeColor(user.role), color: 'white', fontSize: '12px' }}>{user.role}</span></td>
+                    <td>
+                      {user.id != localStorage.getItem('userId') && user.role !== 'SUPER_ADMIN' ? (
+                        <select 
+                          onChange={(e) => updateRole(user.id, e.target.value, user.role)} 
+                          style={{ padding: '8px 12px', borderRadius: '4px', width: '160px', border: '1px solid #3498db', cursor: 'pointer' }}
+                          defaultValue=""
+                        >
+                          <option value="" disabled>Change to:</option>
+                          {localStorage.getItem('role') === 'SUPER_ADMIN' && (
+                            <>
+                              <option value="ADMIN">ADMIN</option>
+                              <option value="UNIT_MANAGER">UNIT MANAGER</option>
+                              <option value="USER">USER</option>
+                            </>
+                          )}
+                          {localStorage.getItem('role') === 'ADMIN' && (
+                            <>
+                              <option value="UNIT_MANAGER">UNIT MANAGER</option>
+                              <option value="USER">USER</option>
+                            </>
+                          )}
+                          {localStorage.getItem('role') === 'UNIT_MANAGER' && user.role === 'USER' && (
+                            <option value="USER">USER</option>
+                          )}
+                        </select>
+                      ) : (
+                        <span style={{ color: '#999' }}>—</span>
+                      )}
+                    </td>
+                    <td>
+                      <button 
+                        onClick={() => deleteUser(user.id)} 
+                        style={{ padding: '4px 12px', background: '#e74c3c', color: 'white', border: 'none', borderRadius: 3, cursor: 'pointer', opacity: (user.id == localStorage.getItem('userId')) ? 0.5 : 1 }}
+                        disabled={user.id == localStorage.getItem('userId')}
+                      >Delete</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+              {users.length === 0 && (
+                <tbody>
+                  <tr>
+                    <td colSpan="6" style={{ textAlign: 'center', padding: 40 }}>👥 No users found</td>
+                  </tr>
+                </tbody>
               )}
-              {localStorage.getItem('role') === 'ADMIN' && (
-                <>
-                  <option value="UNIT_MANAGER">UNIT MANAGER</option>
-                  <option value="USER">USER</option>
-                </>
-              )}
-              {localStorage.getItem('role') === 'UNIT_MANAGER' && user.role === 'USER' && (
-                <option value="USER">USER</option>
-              )}
-            </select>
-          ) : (
-            <span style={{ color: '#999' }}>—</span>
-          )}
-        </td>
-        <td>
-          <button 
-            onClick={() => deleteUser(user.id)} 
-            style={{ padding: '4px 12px', background: '#e74c3c', color: 'white', border: 'none', borderRadius: 3, cursor: 'pointer', opacity: (user.id == localStorage.getItem('userId')) ? 0.5 : 1 }}
-            disabled={user.id == localStorage.getItem('userId')}
-          >Delete</button>
-        </td>
-      </tr>
-    ))}
-  </tbody>
-  {users.length === 0 && (
-    <tbody>
-      <tr>
-        <td colSpan="6" style={{ textAlign: 'center', padding: 40 }}>👥 No users found</td>
-      </tr>
-    </tbody>
-  )}
-</table>
+            </table>
           </>
         )}
       </div>
