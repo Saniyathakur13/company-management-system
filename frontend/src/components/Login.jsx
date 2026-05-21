@@ -15,7 +15,7 @@ function Login() {
     setError('');
     
     try {
-        const response = await axios.post('http://localhost:5000/api/login', { email, password });
+        const response = axios.post('https://company-management-system-tp93.onrender.com/api/login', { email, password })
         
         console.log('Login response:', response.data);
         
